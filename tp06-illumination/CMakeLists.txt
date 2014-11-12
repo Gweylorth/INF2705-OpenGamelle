@@ -1,0 +1,5 @@
+project(inf2705_TP6)
+cmake_minimum_required(VERSION 2.8)
+aux_source_directory(. SRC_LIST)
+add_executable(${PROJECT_NAME} ${SRC_LIST} varglob.h bitmap.h float3.h nuanceurs/nuanceurFragments.glsl nuanceurs/nuanceurSommets.glsl)
+SET(CMAKE_CXX_FLAGS "-std=c++0x -lglut -lGLU -lGL -lGLEW")
