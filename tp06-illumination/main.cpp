@@ -1,6 +1,6 @@
 // Prénoms, noms et matricule des membres de l'équipe:
-// - Prénom1 NOM1 (matricule1)
-// - Prénom2 NOM2 (matricule2)
+// - Pythagore Raoul DEFFO (1635142)
+// - Gwenegan HUDIN (1756642)
 
 #include <stdlib.h>
 #include <iostream>
@@ -52,7 +52,7 @@ GLfloat lumiSpeculaire1[] = { 1.0, 1.0, 1.0, 1.0 };
 #include <array>
 #include <string>
 #include <vector>
-
+#include <iterator>
 
 /* Trouve ici : http://stackoverflow.com/questions/19780788/opengl-c-plain-subdivison-in-quads-radiosity-patches-on-arrays
  * Source : http://coliru.stacked-crooked.com/a/b01db8e00f50c872
@@ -219,24 +219,78 @@ void definirEclairage()
 
 void afficherModele()
 {
+    GLfloat texture[2*4*6];
    // parametres de texture
    switch ( texnumero )
    {
    default:
+   {
       //std::cout << "Sans texture" << std::endl;
       break;
+   }
    case 1:
+   {
       std::cout << "Texture DE" << std::endl;
+      glBindTexture(GL_TEXTURE_2D, textureDE);
+      GLfloat temp1[2*4*6] =
+      {
+          0.33,0.33,     0.33, 0.66,    0.66, 0.66,   0.66, 0.33,
+          0.33,0.,     0.66, 0.,    0.66, 0.33,   0.33, 0.33,
+          0.66,0.33,     0.99, 0.33,    0.99, 0.66,   0.66, 0.66,
+          0.33,0.66,     0.66, 0.66,    0.66, 0.99,   0.33, 0.99,
+          0.,0.33,     0.33, 0.33,    0.33, 0.66,   0., 0.66,
+          0.66,0.,     0.99, 0.,    0.99, 0.33,   0.66, 0.33
+      };
+      std::copy(std::begin(temp1), std::end(temp1), std::begin(texture));
       break;
+   }
    case 2:
+   {
       std::cout << "Texture ECHIQUIER" << std::endl;
+      glBindTexture(GL_TEXTURE_2D, textureECHIQUIER);
+      GLfloat temp2[2*4*6] =
+      {
+          0.,0.,     0., 1.,    1., 1.,   1., 0.,
+          0.,0.,     0., 1.,    1., 1.,   1., 0.,
+          0.,0.,     0., 1.,    1., 1.,   1., 0.,
+          0.,0.,     0., 1.,    1., 1.,   1., 0.,
+          0.,0.,     0., 1.,    1., 1.,   1., 0.,
+          0.,0.,     0., 1.,    1., 1.,   1., 0.
+      };
+      std::copy(std::begin(temp2), std::end(temp2), std::begin(texture));
       break;
+   }
    }
 
    if ( texnumero ) // si on utilise une texture
    {
       std::cout << " utiliseCouleur=" << utiliseCouleur << std::endl;
       std::cout << " texwrapmode=" << texwrapmode << std::endl;
+      if (texnumero == 2) {
+          for (int i = 0; i < 2*4*8; i++) {
+              texture[i] *= 3;
+              if (texture[i] == 0) {
+                  texture[i] = -2;
+              }
+          }
+          switch (texwrapmode) {
+            case 1 :
+              glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+              glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+              break;
+          case 2 :
+            glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+            glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+            break;
+          case 3 :
+            glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+            glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+            break;
+          default :
+              glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+              glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+          }
+      }
    }
 
    if ( utiliseNuanceurs )
@@ -246,11 +300,11 @@ void afficherModele()
       glUniform1i( glGetUniformLocation( progNuanceur, "utiliseBlinn" ), utiliseBlinn );
       glUniform1i( glGetUniformLocation( progNuanceur, "utiliseDirect" ), utiliseDirect );
       glUniform1i( glGetUniformLocation( progNuanceur, "localViewer" ), localViewer );
-      //glActiveTexture( GL_TEXTURE0 ); // activer la texture '0' (valeur de défaut)
-      //glUniform1i( glGetUniformLocation( progNuanceur, "laTexture" ), 0 ); // '0' => utilisation de GL_TEXTURE0
-      //glUniform1i( glGetUniformLocation( progNuanceur, "utiliseCouleur" ), utiliseCouleur );
-      //glUniform1i( glGetUniformLocation( progNuanceur, "texnumero" ), texnumero );
-      //glUniform1i( glGetUniformLocation( progNuanceur, "noirTransparent" ), noirTransparent );
+      glActiveTexture( GL_TEXTURE0 ); // activer la texture '0' (valeur de défaut)
+      glUniform1i( glGetUniformLocation( progNuanceur, "laTexture" ), 0 ); // '0' => utilisation de GL_TEXTURE0
+      glUniform1i( glGetUniformLocation( progNuanceur, "utiliseCouleur" ), utiliseCouleur );
+      glUniform1i( glGetUniformLocation( progNuanceur, "texnumero" ), texnumero );
+      glUniform1i( glGetUniformLocation( progNuanceur, "noirTransparent" ), noirTransparent );
    }
    else
    {
@@ -312,78 +366,80 @@ void afficherModele()
             /*       4+-----------+5         */
             /*             +Z                */
 
-          GLfloat sommets[3*4*5] =
+          GLfloat normals[3*6] =
           {
-             -1.0,  1.0, -1.0,    1.0,  1.0, -1.0,    1.0, -1.0, -1.0,   -1.0, -1.0, -1.0,  // P3,P2,P1,P0
-              1.0, -1.0,  1.0,   -1.0, -1.0,  1.0,   -1.0, -1.0, -1.0,    1.0, -1.0, -1.0,  // P5,P4,P0,P1
-              1.0,  1.0,  1.0,    1.0, -1.0,  1.0,    1.0, -1.0, -1.0,    1.0,  1.0, -1.0,  // P6,P5,P1,P2
-             -1.0,  1.0,  1.0,    1.0,  1.0,  1.0,    1.0,  1.0, -1.0,   -1.0,  1.0, -1.0,  // P7,P6,P2,P3
-             -1.0, -1.0,  1.0,   -1.0,  1.0,  1.0,   -1.0,  1.0, -1.0,   -1.0, -1.0, -1.0,  // P4,P7,P3,P0
-//             -1.0, -1.0,  1.0,    1.0, -1.0,  1.0,    1.0,  1.0,  1.0,   -1.0,  1.0,  1.0   // P4,P5,P6,P7
+              0., 0., -1., // face arriere
+              0., -1., 0., // face bas
+              1., 0., 0., // face droite
+              0., 1., 0., // face haute
+              -1., 0., 0., // face gauche
+              0., 0., 1. // face avant
           };
 
-            // afficher le cube
-            glEnableClientState( GL_VERTEX_ARRAY );
-            //glEnableClientState( GL_NORMAL_ARRAY );
-            //glEnableClientState( GL_TEXTURE_COORD_ARRAY );
-            glVertexPointer( 3, GL_FLOAT, 0, sommets );
-            //glNormalPointer( ... );
-            //glTexCoordPointer( ... );
-            glDrawArrays( GL_QUADS, 0, 4*5 );
-            glDisableClientState( GL_VERTEX_ARRAY );
-            //glDisableClientState( GL_NORMAL_ARRAY );
-            //glDisableClientState( GL_TEXTURE_COORD_ARRAY );
+          if (utiliseNuanceurs) {
+              GLfloat sommets[3*4*6] =
+              {
+                 -1.0,  1.0, -1.0,    1.0,  1.0, -1.0,    1.0, -1.0, -1.0,   -1.0, -1.0, -1.0,  // P3,P2,P1,P0
+                  1.0, -1.0,  1.0,   -1.0, -1.0,  1.0,   -1.0, -1.0, -1.0,    1.0, -1.0, -1.0,  // P5,P4,P0,P1
+                  1.0,  1.0,  1.0,    1.0, -1.0,  1.0,    1.0, -1.0, -1.0,    1.0,  1.0, -1.0,  // P6,P5,P1,P2
+                 -1.0,  1.0,  1.0,    1.0,  1.0,  1.0,    1.0,  1.0, -1.0,   -1.0,  1.0, -1.0,  // P7,P6,P2,P3
+                 -1.0, -1.0,  1.0,   -1.0,  1.0,  1.0,   -1.0,  1.0, -1.0,   -1.0, -1.0, -1.0,  // P4,P7,P3,P0
+                 -1.0, -1.0,  1.0,    1.0, -1.0,  1.0,    1.0,  1.0,  1.0,   -1.0,  1.0,  1.0   // P4,P5,P6,P7
+              };
 
-            Plane p = { { {-1.0, -1.0,  1.0 }, { 1.0, -1.0,  1.0 }, { 1.0,  1.0,  1.0 }, { -1.0,  1.0,  1.0 } } };
-            auto subd = subdivide(p, 4);
-            for (auto& quad : subd) {
-                glBegin(GL_QUADS);
-                    glVertex3fv(quad[3].begin());
-                    glVertex3fv(quad[2].begin());
-                    glVertex3fv(quad[1].begin());
-                    glVertex3fv(quad[0].begin());
-                glEnd();
-            }
+                // afficher le cube
+                glEnableClientState( GL_VERTEX_ARRAY );
+                glEnableClientState( GL_NORMAL_ARRAY );
+                if (texnumero) {
+                    glEnableClientState( GL_TEXTURE_COORD_ARRAY );
+                    glTexCoordPointer( 2, GL_FLOAT, 2*sizeof(GLfloat), texture );
+                }
 
+                glNormalPointer( GL_FLOAT, 3, normals );
+                glVertexPointer( 3, GL_FLOAT, 0, sommets );
+                glDrawArrays( GL_QUADS, 0, 4*6 );
+                glDisableClientState( GL_VERTEX_ARRAY );
+                glDisableClientState( GL_NORMAL_ARRAY );
+                if (texnumero) {
+                    glDisableClientState( GL_TEXTURE_COORD_ARRAY );
+                }
+          } else {
+              GLfloat sommets[3*4*5] =
+              {
+                 -1.0,  1.0, -1.0,    1.0,  1.0, -1.0,    1.0, -1.0, -1.0,   -1.0, -1.0, -1.0,  // P3,P2,P1,P0
+                  1.0, -1.0,  1.0,   -1.0, -1.0,  1.0,   -1.0, -1.0, -1.0,    1.0, -1.0, -1.0,  // P5,P4,P0,P1
+                  1.0,  1.0,  1.0,    1.0, -1.0,  1.0,    1.0, -1.0, -1.0,    1.0,  1.0, -1.0,  // P6,P5,P1,P2
+                 -1.0,  1.0,  1.0,    1.0,  1.0,  1.0,    1.0,  1.0, -1.0,   -1.0,  1.0, -1.0,  // P7,P6,P2,P3
+                 -1.0, -1.0,  1.0,   -1.0,  1.0,  1.0,   -1.0,  1.0, -1.0,   -1.0, -1.0, -1.0,  // P4,P7,P3,P0
+              };
 
-// Algo de gamedev : http://gamedev.stackexchange.com/questions/57095/how-to-subdivide-a-quad
-//            GLfloat a[3] = {-1.0, -1.0,  1.0};
-//            GLfloat b[3] = {1.0, -1.0,  1.0};
-//            GLfloat c[3] = {1.0, 1.0,  1.0};
-//            GLfloat d[3] = {-1.0, 1.0,  1.0};
-//            GLfloat p1[3], p2[3], q1[3], q2[3];
-//            GLfloat a2[3], b2[3], c2[3], d2[3];
-//            GLfloat face[4*3];
-//            for (int i = 0; i < 100; i++) {
-//                for (int k = 0; k < 3; k++) {
-//                    p1[k] = a[k] + i * (d[k] - a[k]) / 3.;
-//                    p2[k] = b[k] + i * (c[k] - b[k]) / 3.;
-//                    q1[k] = a[k] + (i + 1) * (d[k] - a[k]) / 3.;
-//                    q2[k] = b[k] + (i + 1) * (c[k] - b[k]) / 3.;
-//                }
+                // afficher le cube
+                glEnableClientState( GL_VERTEX_ARRAY );
+                glEnableClientState( GL_NORMAL_ARRAY );
+                if (texnumero) {
+                    glEnableClientState( GL_TEXTURE_COORD_ARRAY );
+                    glTexCoordPointer( 2, GL_FLOAT, 2*sizeof(GLfloat), texture );
+                }
+                glVertexPointer( 3, GL_FLOAT, 0, sommets );
+                glNormalPointer( GL_FLOAT, 3, normals );
+                glDrawArrays( GL_QUADS, 0, 4*5 );
+                glDisableClientState( GL_VERTEX_ARRAY );
+                glDisableClientState( GL_NORMAL_ARRAY );
+                if (texnumero) {
+                    glDisableClientState( GL_TEXTURE_COORD_ARRAY );
+                }
 
-//                for (int j = 0; j < 100; j++) {
-//                    for (int k = 0; k < 3; k++) {
-//                        a2[k] = p1[k] + j * (p2[k] - p1[k]) / 3.;
-//                        b2[k] = p1[k] + (j + 1) * (p2[k] - p1[k]) / 3.;
-//                        c2[k] = q1[k] + (j + 1) * (q2[k] - q1[k]) / 3.;
-//                        d2[k] = q1[k] + j * (q2[k] - q1[k]) / 3.;
-//                    }
-//                }
-
-//                for (int k = 0; k < 3; k++) {
-//                    face[k] = a2[k];
-//                    face[3 + k] = b2[k];
-//                    face[6 + k] = c2[k];
-//                    face[9 + k] = d2[k];
-//                }
-
-//                glEnableClientState( GL_VERTEX_ARRAY );
-//                glVertexPointer( 3, GL_FLOAT, 0, face );
-//                glDrawArrays( GL_QUADS, 0, 4 );
-//                glDisableClientState( GL_VERTEX_ARRAY );
-//            }
-
+                Plane p = { { {-1.0, -1.0,  1.0 }, { 1.0, -1.0,  1.0 }, { 1.0,  1.0,  1.0 }, { -1.0,  1.0,  1.0 } } };
+                auto subd = subdivide(p, 5);
+                for (auto& quad : subd) {
+                    glBegin(GL_QUADS);
+                        glVertex3fv(quad[3].begin());
+                        glVertex3fv(quad[2].begin());
+                        glVertex3fv(quad[1].begin());
+                        glVertex3fv(quad[0].begin());
+                    glEnd();
+                }
+          }
 
 
          }
