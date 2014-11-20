@@ -1,0 +1,117 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage{geometry}
+\usepackage[french]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern} \normalfont
+\DeclareFontShape{T1}{lmr}{bx}{sc}{<-> ssub * cmr/bx/sc}{}
+\usepackage{textcomp}
+\usepackage{datetime}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{subcaption}
+\usepackage{tocloft}
+\usepackage{fixltx2e}
+\usepackage{color}
+\usepackage[colorlinks=true,
+			linkcolor=blue,
+			bookmarksnumbered=true,
+			pdftitle={Rapport INF2705},
+			pdfauthor={Pythagore Deffo, Gwenegan Hudin},
+			pdfborder={0 0 0},
+			pdfsubject={Rapport de laboratoire INF2705}]{hyperref}
+
+% Custom commands
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+\newcommand{\Section}[1]{\section*{#1} \addcontentsline{toc}{section}{#1} \setcounter{subsection}{0}}
+%\renewcommand*{\theHsection}{chY.\the\value{section}}
+\renewcommand{\thesection}{\Roman{section}.}
+\renewcommand{\thesubsection}{\arabic{subsection}.}
+\renewcommand{\thesubsubsection}{\alph{subsubsection}.}
+\renewcommand{\cftsecnumwidth}{2em}
+\renewcommand{\cftsubsecnumwidth}{2em}
+\renewcommand{\cftsubsubsecnumwidth}{2em}
+\addto\captionsfrench{
+	\renewcommand{\cfttoctitlefont}{\Large}
+	\renewcommand{\contentsname}{\centering \textsc{Table des Matières}\\[0.5cm]}
+}
+
+\renewcommand{\baselinestretch}{1.15}
+
+\begin{document}
+
+\begin{titlepage}
+	\begin{center}
+		\begin{figure}
+        \begin{subfigure}[c]{0.2\textwidth}
+        		\centering
+                \includegraphics[width=0.6\textwidth]{images/logo-polymtl}
+        \end{subfigure}
+		\end{figure}
+		
+		
+		\vspace{30pt}
+		\textsc{\huge Génie Informatique}\\
+		\textsc{\LARGE Rapport de Travaux Pratiques}\\		
+		\vfill
+		
+		% Title
+		\HRule \\[0.7cm]
+		{\Huge \bfseries INF4705 : Lab 6}\\[0.4cm]
+		{\Large Illumination et aplat de texture}\\[0.2cm]
+		\HRule\\[1cm]
+		
+		\vfill
+		
+		% Author
+		\begin{minipage}{0.49\textwidth}
+			\begin{flushleft} \LARGE
+				\textbf{Auteurs}\\
+				Pythagore Raoul \textsc{Deffo}\\ 1635142\\
+				Gwenegan \textsc{Hudin}\\ 1756642\\[0.5cm]
+			\end{flushleft}
+		\end{minipage}
+		\begin{minipage}{0.49\textwidth}
+			\begin{flushright} \LARGE
+				\textbf{Rendu}\\
+				11 Décembre 2014\\ À Polytechnique Montréal\\[0.5cm]
+			\end{flushright}
+		\end{minipage}
+	\end{center}
+\end{titlepage}
+
+\newpage
+
+\hfill
+
+\newpage
+
+\tableofcontents
+
+\newpage
+
+\section{Introduction}
+
+
+\section{Exposé du problème}
+
+\section{Ajouts et modifications}
+
+\section{Discussion}
+
+\section{Difficultés}
+
+\section{Conclusion}
+
+\section{Bibliographie}
+
+\begin{itemize}
+	\item \href{http://msdn.microsoft.com/en-us/library/296az74e.aspx}{Microsoft Developer Network, Integer Limits}
+	\item \href{http://www.cplusplus.com/reference/algorithm/find/}{C++ Reference, Find algorithm}
+	\item Notes de cours "Algorithmes Voraces", Gilles Pesant
+	\item Notes de cours "Algorithmes Dynamiques", Gilles Pesant
+\end{itemize}
+
+\end{document}
