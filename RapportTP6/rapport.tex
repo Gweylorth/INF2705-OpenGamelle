@@ -94,14 +94,39 @@
 
 \section{Introduction}
 
+Dans ce rapport, nous voulons revenir sur le sixième travail pratique du cours INF2707 - Infographie. Nous aborderons le problème initial, ce que nous avons ou aurions pu ajouter à la réalisation ; après quoi nous discuterons de points précis de notre implémentation, avant d'identifier les difficultés auxquelles nous avons été confrontés.
+
+Pour réaliser ce TP, nous avions 6h de Lab dédiées.
 
 \section{Exposé du problème}
 
-\og Mentionnez la situation initiale, les objectifs des travaux pratiques et le contexte d'application du travail (le tout en vos mots). Remarque: un simple «copier/coller» des éléments demandés à partir des énoncés de laboratoire se verra attribuer la note «zéro». \fg
+Dans ce TP, nous devions mettre en application les méthodes d'illumination OpenGL évoquées en cours, ainsi que nous essayer à l'application de textures sur un objet 3D.
+
+Les sources fournies au début de ce TP permettaient l'affichage d'une fenêtre OpenGL. Celle-ci présente un modèle 3D de cube, et une pression sur les touches numériques du clavier permet de changer pour un autre modèle (théière, sphère, tore, dodécahèdre, icosahèdre). Une source lumineuse, représentée par une petite sphère, peut être contrôlée avec la souris (position et orientation).
+
+Nos objectifs sont multiples :
+
+\begin{itemize}
+	\item Utiliser une source lumineuse en spot, et appliquer les modèles d'illumination de Blinn et Phong par les nuanceurs. Les objets doivent aussi être éclairables sans nuanceurs.
+	\item Modifier les paramètres du spot (angle maximal et exposant) par le clavier.
+	\item Appliquer une illumination spot à la Direct3D, avec une atténuation sur les bords de la zone éclairée.
+	\item Permettre l'illumination d'une des faces du cube sans nuanceur, par subdivision de celle-ci.
+	\item Afficher deux textures (dé ou échiquier) sur le cube et la théière. Lorsqu'appliquée au cube, la texture du dé doit effectivement représenter un dé à 6 faces.
+	\item Varier le rendu de la texture échiquier en modifiant le mode de répétition sur le cube.
+	\item Rendre les pixels noirs transparents par les nuanceurs.
+\end{itemize}
+
+Comme pour les travaux précédents, nous avons réalisé ce TP en travaillant avec C++11, dans l'environnement de développement QT Creator 4 sous Fedora.
 
 \section{Ajouts et modifications}
 
-\og Décrivez les principaux ajouts ou modifications que vous avez faits ou que vous auriez pu faire, en rapport avec les exigences des TPs. \fg
+Nous avons respecté les exigences de ce TP sans les altérer.
+
+Si nous avions eu plus de temps, nous aurions pu grandement améliorer notre mécanisme de subdivision de faces, en utilisant des \textit{VertexPointer}. Cela nous aurait permis de gagner en performances, et ainsi mieux subdiviser la face du cube. Cette subdivision pourrait aussi être étendue à toutes les faces du cube.
+
+Cependant, le cube n'était pas le seul modèle à pâtir de l'éclairage OpenGL en pipeline fixe. Ainsi, la division de faces aurait pu être utilisée sur le dodécahèdre et l'icosahèdre. Ceux-ci sont néanmoins bien plus complexes à subdiviser, on ne peut simplement utiliser des \textit{Quads}. Nous aurions eu à nous pencher sur les problématiques de tesselation, et utiliser des triangles.
+
+Enfin, comme nous avions un dé à 6 faces (un d6), il aurait été intéressant d'appliquer des textures similaires pour réaliser un d12 et un d20, respectivement sur le dodécahèdre et l'icosahèdre. Ainsi, nous aurions été parés pour une séance de Donjons \& Dragons !
 
 \section{Discussion}
 
@@ -114,6 +139,8 @@
     
     Mentionnez les améliorations et optimisations possibles et faisables.
 \fg
+
+
 
 \section{Difficultés}
 
