@@ -311,17 +311,20 @@ void clavier( unsigned char touche, int x, int y )
    case '8':
    case '9':
       indiceTexture = touche - '0';
+      facteurZ = (touche == '0') ? 200. : 100.;
       glutPostRedisplay();
       break;
 
    case '-':
-      facteurZ -= 1.0;
+      facteurZ -= (facteurZ > -250.) ? 1.0 : 0.0;
+      std::cout << "Facteur Z : " << facteurZ << std::endl;
       glutPostRedisplay();
       break;
 
    case '+':
    case '=':
-      facteurZ += 1.0;
+      facteurZ += (facteurZ < 250.) ? 1.0 : 0.0;
+      std::cout << "Facteur Z : " << facteurZ << std::endl;
       glutPostRedisplay();
       break;
 

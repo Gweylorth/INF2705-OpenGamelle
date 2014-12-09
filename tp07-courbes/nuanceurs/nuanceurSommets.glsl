@@ -19,6 +19,10 @@ float Fonc( float x, float y )
 
 void main( void )
 {
+    gl_FrontColor = gl_Color;
+    gl_BackColor = 1.0 - gl_Color;
+    gl_TexCoord[0] = gl_MultiTexCoord0;
+
     float epsilon = 0.001;
     if (utiliseTexture == 0) {
         float x = gl_Vertex.x;
@@ -29,6 +33,8 @@ void main( void )
         normal.z = 1.;
         normal = normalize( normal );
         normal = gl_NormalMatrix * normal;
+    } else {
+        gl_Vertex.z -= texture2D(displacementMap, gl_TexCoord[0].st) * facteurZ / 100;
     }
 
    // transformation standard du sommet (ModelView et Projection)
@@ -43,7 +49,5 @@ void main( void )
    lightDir = vec3( gl_LightSource[0].position.xyz - vsPos );
    eyeVec = -vsPos;
 
-   gl_FrontColor = gl_Color;
-   gl_BackColor = 1.0 - gl_Color;
-   gl_TexCoord[0] = gl_MultiTexCoord0;
+
 }
