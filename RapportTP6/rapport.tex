@@ -130,16 +130,56 @@ Enfin, comme nous avions un dé à 6 faces (un d6), il aurait été intéressant
 
 \section{Discussion}
 
-\og
-    Discutez des points pertinents du code implémenté en rapport avec la théorie du cours. Au besoin, joindre le code pertinent en annexe.
-    
-    Dites si ce que vous avez réalisé est correct ou non, et en quoi son implantation respecte bien ou moins bien les requis.
-    
-    Listez les points forts et les points faibles de l'application et identifiez les causes.
-    
-    Mentionnez les améliorations et optimisations possibles et faisables.
-\fg
+\subsection{Subdivision de surfaces}
 
+Dans ce travail pratique, nous avons eu à faire une subdivision pour une face d'un cube pour permettre le meilleur éclairage de cette face sans nuanceurs. Pour ce faire, nous nous sommes inspirés d'un algorithme de découpage de surface que nous avons trouvé sur le site suivant:  \href{http://stackoverflow.com/questions/19780788/opengl-c-plain-subdivison-in-quads-radiosity-patches-on-arrays}{Stack Overflow - OpenGL C++ Plain Subdivison in QUADS (Radiosity) patches on arrays}. Quelques difficultés ont été rencontrées, elles seront présentées dans la suite de ce rapport.
+
+\subsection{Illumination}
+
+Nous avons implémenté une lumière orientée de type \textit{spot} pour éclairer les faces d'un cube et d'une théière.  Une lumière ayant un angle maximal (\textit{GL\_SPOT\_CUTOFF}) de projection et un exposant (\textit{GL\_SPOT\_EXPONENT}) modifiables. D'après la loi de Lambert, l'intensité de la lumière et l'angle entre la normale avec la direction des rayons incidents sont liés. Pour ce faire, nous normalisons les surfaces afin qu'elles soient perpendiculaires aux rayons lumineux, ceci pour avoir une réflexion plus intense.
+
+Pour la réflexion spéculaire,  nous avons implémenté deux modèles : celui de Phong dont l'équation est : 
+$ cos(\theta) = R \cdot V = reflect (L,N) \cdot V $, et celui de Blinn avec pour équation : $ cos(\theta) = B \cdot N = bissect(L,V) \cdot N $, où $ bissect (L,V) = \frac{L+V}{|L+V|} = normalise(L+V) $. La différence entre les deux modèles est que Phong ajoute les effets spéculaires tandis que Blinn utilise un calcul moins coûteux avec la bissectrice, mais le résultat est presque semblable. (voir les figures ci-dessous).
+
+\begin{figure}[h!]
+\centering
+	\begin{subfigure}[c]{0.3\textwidth}
+		\includegraphics[width=\textwidth]{images/blinn}
+		\caption{Eclairage avec le modèle de Blinn}
+	\end{subfigure}
+	\begin{subfigure}[c]{0.3\textwidth}
+		\includegraphics[width=\textwidth]{images/phong}
+		\caption{Eclairage avec le modèle de Phong}
+	\end{subfigure}
+\caption{Différentes méthodes d'éclairage par nuanceur}
+\end{figure}
+
+Nous faisons ici un éclairage par fragment à l'aide des nuanceurs pour les deux modèles implémentés. Nous remarquons que pour l'éclairage du cube, les faces qui ne sont pas découpées ne reçoivent d'éclairage qu'à leurs sommets.
+
+Notre programme permet aussi d'alterner entre le modèle \textit{spot} d'OpenGl et le modèle Direct3D.
+
+\subsection{Application de la texture}
+
+La texture étant une image numérique qui recouvre un objet, nous avons appliqué deux différentes textures sur nos objets illuminés : texture de dé et texture d'échiquier. Pour ce faire, nous définissons d'abord les coordonnées des textures, par la suite nous utilisons la fonction \textit{glTexCoordPointer()} qui permet de spécifier la localisation et le format des données des coordonnées de textures que nous utilisons.
+
+\subsection{Forces et faiblesses de l'application}
+
+\subsubsection{Points forts}
+
+\begin{itemize}
+	\item Tous les différents modèles d'éclairage implémentés
+	\item Textures de base correctement appliquées
+	\item Bon outil de subdivision du cube
+	\item Effet convaincant sur le mode d'éclairage type Direct3D
+\end{itemize}
+
+\subsubsection{Points faibles}
+
+\begin{itemize}
+	\item Découpage de surface du cube devrait être fait par \textit{VertexPointer}
+	\item Calcul des différents modes de répétition de texture sur le cube
+	\item Changement de la transparence des zones noires
+\end{itemize}
 
 
 \section{Difficultés}
@@ -152,15 +192,8 @@ Enfin, comme nous avions un dé à 6 faces (un d6), il aurait été intéressant
 
 \fg
 
+Tesselation
+
 \section{Conclusion}
-
-\section{Bibliographie}
-
-\begin{itemize}
-	\item \href{http://msdn.microsoft.com/en-us/library/296az74e.aspx}{Microsoft Developer Network, Integer Limits}
-	\item \href{http://www.cplusplus.com/reference/algorithm/find/}{C++ Reference, Find algorithm}
-	\item Notes de cours "Algorithmes Voraces", Gilles Pesant
-	\item Notes de cours "Algorithmes Dynamiques", Gilles Pesant
-\end{itemize}
 
 \end{document}
