@@ -184,16 +184,32 @@ La texture étant une image numérique qui recouvre un objet, nous avons appliqu
 
 \section{Difficultés}
 
-\og 
+\subsection{Subdivision de surfaces}
 
-    Identifiez les difficultés que vous avez rencontrées durant le développement (en spécifiant les fonctionnalités qui posaient des problèmes) et dites brièvement pourquoi c'était difficile.
-    
-    Discutez de ce que vous avez fait pour surmonter ces difficultés.
+La subdivision d'une surface du cube a été un des problèmes les plus lourds à gérer durant ce laboratoire, et nous y avons consacré presque la totalité de la première séance (2h30).
 
-\fg
+Notre premier essai a été le remplissage d'un Vertex Buffer à la main, avec des doubles boucles découpant la face ligne par ligne, tout en respectant le sens horaire de déclaration des sommets. Après de nombreux essais et échecs, ponctués de gels du système, nous nous sommes résolus à chercher des pistes sur Internet.
 
-Tesselation
+Nous avons passé un certain temps à lire des documentations et articles, notamment concernant les problématiques de tesselation, qui étaient intéressants mais traitaient de problèmes bien plus complexes que celui que nous voulions résoudre.
+
+Finalement, nous avons trouvé plusieurs question Stack Overflow et posts de forums sur notre problème, dont des méthodes C++11 intéressantes que nous avons utilisé (le lien est cité plus haut, ainsi que dans le \textit{main.cpp} de notre TP). Nous y avons ensuite ajouté le calcul des normales.
+
+\subsection{Compréhension des modèles d'éclairage}
+
+Malgré notre présence durant le cours, et la relecture des notes, les modèles d'illumination de Phong et Blinn restaient encore très obscurs pour nous. Beaucoup de temps a été consacré à la compréhension des formules et de l'importance des variables en jeu, à l'adaptation à une lumière de type \textit{spot}, et au calcul des trois composantes séparées de la lumière.
+
+Il était particulièrement difficile de voir exactement quel résultat lumineux était attendu, donc nous avions l'impression d'avancer dans le flou. Après correction, nous savons que notre méthode d'illumination de Blinn était incorrecte, mais nous ne le voyions pas lors de nos tests. Nous pouvions simplement constater que la composante spéculaire était différente entre Blinn et Phong, et nous paraissait ressembler à l'image d'illumination fournie dans le sujet de laboratoire.
+
+\subsection{Répétition de texture}
+
+Quand nous sommes arrivés au point sur la répétition de texture, nous étions déjà à 10h de travail sur ce laboratoire. Nous avons essayé, empiriquement, d'obtenir l'effet voulu avec ce qu'il nous semblait être les bons paramètres de texture. Le placement (centre, bas gauche...) a été fait par essais successifs jusqu'à trouver des valeurs de multiplication de texture qui semblaient correspondre. Cela ne nous paraissait pas être la bonne méthode, mais nous n'avons pas trouvé d'autre, et l'affichage correspondait avec les images demandées.
+
+Malheureusement, là aussi, suite au retour sur notre TP, nous savons que nous n'avons bel et bien pas fait cela de la bonne façon, mais nous ne voyons toujours pas comment faire.
 
 \section{Conclusion}
+
+Bien qu'il ait été le plus difficile, long et parfois frustrant, ce Lab a aussi été l'un des plus instructifs de ce cours. Nous avons vraiment mieux compris la manipulation de nuanceurs, et l'application de texture, si bien que la réalisation du TP7 a ensuite été très rapide.
+
+Il est cependant dommage de ne pas pouvoir voir les bonnes méthodes que nous aurions dû appliquer sur les points que nous n'avons pas réussi. Peut être serait-il intéressant d'avoir une correction après le TP, ou un retour nous permettant de nous corriger et aussi d'améliorer notre note ?
 
 \end{document}
